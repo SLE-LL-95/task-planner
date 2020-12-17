@@ -6,3 +6,9 @@ config/plan_*
 
 # problem files
 config/problem_*
+
+# vscode files
+.vscode/*
+
+# installation path
+dist/*
