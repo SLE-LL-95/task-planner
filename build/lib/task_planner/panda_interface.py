@@ -60,7 +60,7 @@ class PANDAInterface(TaskPlannerInterface):
         #                                           predicate_task_goals)
 
 
-        self.planner_cmd = self.planner_cmd.replace('PROBLEM', "/mnt/DATEN/Dokumente/Master_Autonomous_Systems/3rd_Semester/Software_Development_Project/HDDL_Parser/PANDA_Material/domains-totally-ordered/transport/problems/pfile01.hddl") #this is just for test! problem file will be generated generate_problem_file()
+        self.planner_cmd = self.planner_cmd.replace('PROBLEM', "/mnt/DATEN/Dokumente/Master_Autonomous_Systems/3rd_Semester/Software_Development_Project/HDDL_Parser/PANDA_Material/domains-totally-ordered/transport/problems/pfile10.hddl") #this is just for test! problem file will be generated generate_problem_file()
         self.planner_cmd = self.planner_cmd.replace('DOMAIN', self.domain_file)
 
         planner_cmd_elements = self.planner_cmd.split()
@@ -219,6 +219,7 @@ class PANDAInterface(TaskPlannerInterface):
                 
                 plan_sequence = [line for line in plan_file] #this works because a text file has an internal pointer
 
+                #A Line normally looks like this: "0: drive(truck_0,city_loc_2,city_loc_1)"
                 last_action_number = -1
                 for line in plan_sequence:
                     action_number, action_line = line.split(": ")
@@ -251,13 +252,23 @@ class PANDAInterface(TaskPlannerInterface):
         return True, plans[shortest_plan_idx]
 
     def process_action_str(self, action_line: str) -> Action:
+        '''Process single line of planner output
+        Example: drive(truck_0,city_loc_2,city_loc_1)
+        '''
+
+        #split name/parameters
         action_name, action_parameter_string = action_line.split("(")
+
+        #remove closing brace and newline character
         action_parameter_string = action_parameter_string.replace(")","")
         action_parameter_string = action_parameter_string.replace("\n","")
+
+        #split paramters
         action_params = action_parameter_string.split(",")
 
-        #this should be later replaced by own action_creator
+        #Create Action from library
         action = ActionModelLibrary.get_action_model(action_name.upper(), action_params)
 
+        #print name and parameters (for debug only, remove later)
         print(f"Name: {action_name} | Parameters: {action_params}")
         return action

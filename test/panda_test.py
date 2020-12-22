@@ -9,7 +9,7 @@ from task_planner.panda_interface import PANDAInterface
 def get_planner_config(config_file_path):
     planner_config_params = None
     with open(config_file_path, 'r') as config_file:
-        planner_config_params = yaml.load(config_file)
+        planner_config_params = yaml.safe_load(config_file)
     return planner_config_params
 
 
@@ -22,8 +22,6 @@ plan_file_path = "planner_output/"
 planner_interface = PANDAInterface(test_kb_name, domain_file, planner_cmd, plan_file_path, debug=True)
 
 task_request = TaskRequest()
-#task_request.load_id = 'mobidik'
-#task_request.delivery_pose.id = 'DELIVERY_LOCATION'
 task_goals = []
 retval, plan = planner_interface.plan(task_request, 'frank', task_goals)
 
