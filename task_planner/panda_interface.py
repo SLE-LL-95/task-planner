@@ -14,7 +14,7 @@ from ropod.structs.action import Action
 from ropod.structs.area import Area
 
 from task_planner.planner_interface import TaskPlannerInterface
-from task_planner.knowledge_base_interface import Predicate
+from task_planner.knowledge_base_interface import Predicate, Task
 from task_planner.action_models_hddl import ActionModelLibrary
 from task_planner.knowledge_models_hddl import HDDLPredicateLibrary, HDDLFluentLibrary,\
                                           HDDLNumericFluentLibrary
@@ -40,33 +40,34 @@ class PANDAInterface(TaskPlannerInterface):
         # TODO: check if there are already goals in the knowledge base and,
         # if yes, add them to the task_goals list
 
-        # predicate_task_goals = []
-        # for task_goal in task_goals:
-        #     if isinstance(task_goal, Predicate):
-        #         predicate_task_goals.append(task_goal)
-        #     elif isinstance(task_goal, tuple):
-        #         predicate_task_goals.append(Predicate.from_tuple(task_goal))
-        #     elif isinstance(task_goal, dict):
-        #         predicate_task_goals.append(Predicate.from_dict(task_goal))
-        #     else:
-        #         raise Exception('Invalid type to task_goal encountered')
+        htn_task_goals = []
+        for task_goal in task_goals:
+            if isinstance(task_goal, Task):
+                htn_task_goals.append(task_goal)
+            elif isinstance(task_goal, tuple):
+                htn_task_goals.append(Task.from_tuple(task_goal))
+            elif isinstance(task_goal, dict):
+                htn_task_goals.append(Task.from_dict(task_goal))
+            else:
+                raise Exception('Invalid type to task_goal encountered')
 
-        # kb_predicate_assertions = self.kb_interface.get_predicate_assertions()
-        # kb_fluent_assertions = self.kb_interface.get_fluent_assertions()
+        kb_predicate_assertions = self.kb_interface.get_predicate_assertions()
+        kb_fluent_assertions = self.kb_interface.get_fluent_assertions()
 
-        # self.logger.info('Generating problem file')
-        # problem_file = self.generate_problem_file(kb_predicate_assertions,
-        #                                           kb_fluent_assertions,
-        #                                           predicate_task_goals)
+        self.logger.info('Generating problem file')
+        problem_file = self.generate_problem_file(kb_predicate_assertions,
+                                                  kb_fluent_assertions,
+                                                  htn_task_goals)
 
 
-        self.planner_cmd = self.planner_cmd.replace('PROBLEM', "/mnt/DATEN/Dokumente/Master_Autonomous_Systems/3rd_Semester/Software_Development_Project/HDDL_Parser/PANDA_Material/domains-totally-ordered/transport/problems/pfile10.hddl") #this is just for test! problem file will be generated generate_problem_file()
+        self.planner_cmd = self.planner_cmd.replace('PROBLEM', problem_file)
         self.planner_cmd = self.planner_cmd.replace('DOMAIN', self.domain_file)
 
         planner_cmd_elements = self.planner_cmd.split()
 
         #Call Planner
         self.logger.info('Planning task...')
+        print(self.planner_cmd)
         planner_output=subprocess.run(planner_cmd_elements, capture_output=True)
 
         #catch error
@@ -85,9 +86,9 @@ class PANDAInterface(TaskPlannerInterface):
         self.logger.info('Parsing plans...')
         plan_found, plan = self.parse_plan(task_request.load_type, robot)
 
-        # self.logger.info('Removing problem file...')
-        # os.remove(problem_file)
-        # self.logger.info('Planner done')
+        self.logger.info('Removing problem file...')
+        os.remove(problem_file)
+        self.logger.info('Planner done')
     
         return plan_found, plan
 
@@ -100,7 +101,7 @@ class PANDAInterface(TaskPlannerInterface):
         # we generate strings from the predicate assertions of the form
         # (predicate_name param_1 param_2 ... param_n)
         for assertion in predicate_assertions:
-            ordered_param_list, obj_types = PDDLPredicateLibrary.get_assertion_param_list(assertion.name,
+            ordered_param_list, obj_types = HDDLPredicateLibrary.get_assertion_param_list(assertion.name,
                                                                                           assertion.params,
                                                                                           obj_types)
             assertion_str = '        ({0} {1})\n'.format(assertion.name, ' '.join(ordered_param_list))
@@ -111,15 +112,15 @@ class PANDAInterface(TaskPlannerInterface):
         # (= (fluent_name param_1 param_2 ... param_n) fluent_value); otherwise,
         # we generate strings just like for predicate assertions
         for assertion in fluent_assertions:
-            if hasattr(PDDLPredicateLibrary, assertion.name):
-                ordered_param_list, obj_types = PDDLPredicateLibrary.get_assertion_param_list(assertion.name,
+            if hasattr(HDDLPredicateLibrary, assertion.name):
+                ordered_param_list, obj_types = HDDLPredicateLibrary.get_assertion_param_list(assertion.name,
                                                                                               assertion.params,
                                                                                               obj_types)
                 assertion_str = '        ({0} {1} {2})\n'.format(assertion.name,
                                                                  ' '.join(ordered_param_list),
                                                                  assertion.value)
-            elif hasattr(PDDLFluentLibrary, assertion.name):
-                ordered_param_list, obj_types = PDDLFluentLibrary.get_assertion_param_list(assertion.name,
+            elif hasattr(HDDLFluentLibrary, assertion.name):
+                ordered_param_list, obj_types = HDDLFluentLibrary.get_assertion_param_list(assertion.name,
                                                                                            assertion.params,
                                                                                            assertion.value,
                                                                                            obj_types)
@@ -127,7 +128,7 @@ class PANDAInterface(TaskPlannerInterface):
                                                                  ' '.join(ordered_param_list),
                                                                  assertion.value)
             else:
-                ordered_param_list, obj_types = PDDLNumericFluentLibrary.get_assertion_param_list(assertion.name,
+                ordered_param_list, obj_types = HDDLNumericFluentLibrary.get_assertion_param_list(assertion.name,
                                                                                                   assertion.params,
                                                                                                   obj_types)
                 assertion_str = '        (= ({0} {1}) {2})\n'.format(assertion.name,
@@ -161,12 +162,18 @@ class PANDAInterface(TaskPlannerInterface):
         #     )
         # )
         goal_str = ''
-        for task_goal in task_goals:
-            goal_predicate, goal_params = task_goal.name, task_goal.params
-            goal_str += '            ({0} {1})\n'.format(goal_predicate,
-                                                         ' '.join([param.value for param in goal_params]))
-        goal_str = '    (:goal\n        (and\n{0}        )\n    )\n'.format(goal_str)
-
+        task_lines = ''
+        for task_no,task_goal in enumerate(task_goals):
+            goal_task, goal_params = task_goal.name, task_goal.params
+            task_lines += '            (task{0} ({1} {2}))\n'.format(task_no,goal_task,
+                                                                     ' '.join([param.value for param in goal_params]))
+        goal_str += '    (:htn\n'
+        goal_str += '        :parameters ()\n'
+        goal_str += '        :subtasks (and\n'
+        goal_str += '{0}'.format(task_lines)
+        goal_str += '         )\n'
+        goal_str += '         :ordering ()\n'
+        goal_str += '    )\n\n'
         # we finally write the problem file, which will be in the format
         # (define (problem problem-name)
         #     (:domain domain-name)
@@ -176,20 +183,20 @@ class PANDAInterface(TaskPlannerInterface):
         #     (:objects
         #         ...
         #     )
-        #     (:goals
+        #     (:htn
         #         ...
         #     )
         # )
-        problem_file_name = 'problem_{0}.pddl'.format(str(uuid.uuid4()))
+        problem_file_name = 'problem_{0}.hddl'.format(str(uuid.uuid4()))
         problem_file_abs_path = join(self.plan_file_path, problem_file_name)
         self.logger.info('Generating planning problem...')
         with open(problem_file_abs_path, 'w') as problem_file:
-            header = '(define (problem ropod)\n'
+            header = '(define (problem domestic)\n'
             header += '    (:domain {0})\n'.format(self.domain_name)
             problem_file.write(header)
             problem_file.write(obj_type_str)
-            problem_file.write(init_state_str)
             problem_file.write(goal_str)
+            problem_file.write(init_state_str)
             problem_file.write(')\n')
         return problem_file_abs_path
 

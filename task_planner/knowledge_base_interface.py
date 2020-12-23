@@ -7,6 +7,7 @@ import logging
 class AssertionTypes(object):
     PREDICATE = 'predicate'
     FLUENT = 'fluent'
+    TASK = 'task'
 
 
 class PredicateParams(object):
@@ -262,6 +263,106 @@ class Fluent(object):
 
     def __repr__(self) -> str:
         return "Fluent(" + str(self.to_dict()) + ")"
+
+class Task(object):
+    '''An object representing a htn task (task name, parameters)
+        Preconditions and Effects are only interesting for the planner,
+        thus they are no considered here.
+       
+    @author Lou Lauter
+    @contact lou.lauter@t-online.de
+
+    '''
+    def __init__(self):
+        self.name = ''
+        self.params = []
+
+
+    def __eq__(self, other) -> bool:
+        '''Returns True if the names and all parameters are the same.
+        '''
+        equal = False
+        if self.name == other.name:
+            equal = True
+            for param in self.params:
+                if param not in other.params:
+                    equal = False
+                    break
+
+        return equal
+
+    def to_dict(self) -> dict:
+        '''Converts the object to a dictionary with the keys - "name", "params".
+        The value of "params" is a list of PredicateParams dictionaries.
+        '''
+        dict_task = {}
+        dict_task['name'] = self.name
+        dict_task['type'] = AssertionTypes.TASK
+    
+        dict_task['params'] = []
+        for predicate in self.params:
+            dict_params = predicate.to_dict()
+            dict_task['params'].append(dict_params)
+        
+        return dict_task
+
+    def to_tuple(self) -> Tuple[str, list, str]:
+        '''Convert the object to tuple for with 3 elements namely
+        name -- string
+        params -- list of tuple(str, str)
+        '''
+        return (self.name, [param.to_tuple() for param in self.params])
+
+    @staticmethod
+    def from_tuple(tuple_task: tuple):
+        '''Returns a Task object created from the input tuple.
+
+        Keyword arguments:
+        @param tuple_fluent -- a tuple with two entries, the first representing
+                               the name of the task, the second a list of
+                               ("name", "value") pairs for the task parameters.
+
+        '''
+        task = Task()
+        task.name, params = tuple_task
+        for param in params:
+            parameters = PredicateParams.from_tuple(param)
+            task.params.append(parameters)
+        
+        return task
+
+    @staticmethod
+    def from_dict(dict_task: dict):
+        '''Returns a Task object created from the input dictionary.
+
+        Keyword arguments:
+        @param dict_fluent-- a dictionary with four keys - "name", "params"
+                             where "params" is a list of PredicateParams dictionaries
+                         
+        '''
+        task = Task()
+        task.name = dict_task['name']
+ 
+        dict_params = dict_task['params']
+        for param in dict_params:
+            params = PredicateParams.from_dict(param)
+            task.params.append(params)
+        
+        return task
+
+    def __str__(self) -> str:
+        string = "Task(\n"
+        string += '\t' + 'name:' + str(self.name) + '\n'
+        string += '\t' + 'type:' + str(AssertionTypes.TASK) + '\n'
+        string += '\t' + 'params:[' + '\n'
+        for param in self.params:
+            string += '\t\t' + str(param) + '\n'
+        string += '\t' + ']' + '\n'
+        string += ")"
+        return string
+
+    def __repr__(self) -> str:
+        return "Task(" + str(self.to_dict()) + ")"
 
 class KnowledgeBaseInterface(object):
     '''Defines an interface for interacting with a robot knowledge base.
