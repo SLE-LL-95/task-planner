@@ -307,7 +307,7 @@ class Task(object):
         return dict_task
 
     def to_tuple(self) -> Tuple[str, list, str]:
-        '''Convert the object to tuple for with 3 elements namely
+        '''Convert the object to tuple for with 2 elements namely
         name -- string
         params -- list of tuple(str, str)
         '''

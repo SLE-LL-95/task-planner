@@ -94,7 +94,7 @@ class PANDAInterface(TaskPlannerInterface):
 
     def generate_problem_file(self, predicate_assertions: list,
                               fluent_assertions: list,
-                              task_goals: Sequence[Predicate]) -> str:
+                              task_goals: Sequence[Task]) -> str:
         obj_types = {}
         init_state_str = ''
 
@@ -154,13 +154,17 @@ class PANDAInterface(TaskPlannerInterface):
         obj_type_str = '    (:objects\n{0}    )\n\n'.format(obj_type_str)
 
         # we generate a string with the planning goals of the form
-        # (:goals
-        #     (and
-        #         (predicate_1_name param_1 param_2 ... param_n)
-        #         ...
-        #         (predicate_n_name param_1 param_2 ... param_n)
-        #     )
+        # (:htn
+        #       :parameters()
+        #       :subtasks (and
+        #           (task1 param_1, ... , param_n)
+        #           (...)     
+        #           (taskn param_1, ... , parma_n)    
+        #       )
+        #       :ordering()
         # )
+        #TODO: Allow Task ordering
+
         goal_str = ''
         task_lines = ''
         for task_no,task_goal in enumerate(task_goals):
@@ -180,10 +184,10 @@ class PANDAInterface(TaskPlannerInterface):
         #     (:objects
         #         ...
         #     )
-        #     (:objects
+        #     (:htn
         #         ...
         #     )
-        #     (:htn
+        #     (:init
         #         ...
         #     )
         # )

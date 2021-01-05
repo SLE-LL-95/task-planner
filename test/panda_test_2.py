@@ -41,7 +41,7 @@ predicates = [('robotName',[('Robot','Frank')]),
               ('inside',[('Object0','Beer'),('Object1','Fridge')]),
               ('known',[('Person','Lou')])]
 fluents = [('robotAt',[('Robot','Frank')],"ROBOT_START_POSITION"),
-           ('objectAt',[('Object','Beer')],"Kitchen"),
+           ('objectAt',[('Object','Beer')],'Kitchen'),
            ('personAt',[('Person', 'Lou')],'Couch')]
 
 planner_interface.kb_interface.insert_facts(predicates)
@@ -50,7 +50,6 @@ planner_interface.kb_interface.insert_fluents(fluents)
 #Task Definition---------------------------------------------------------------
 task_request = TaskRequest()
 task_goals = [('bring_object',[('p','Lou'),('o','Beer'),('r', 'Frank')])]
-#task_goals = [('pick_random_object',[('l2','Kitchen'),('r', 'Frank')])]
 
 retval, plan = planner_interface.plan(task_request, 'Frank', task_goals)
 

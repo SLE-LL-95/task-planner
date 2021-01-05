@@ -94,7 +94,7 @@ class PANDAInterface(TaskPlannerInterface):
 
     def generate_problem_file(self, predicate_assertions: list,
                               fluent_assertions: list,
-                              task_goals: Sequence[Predicate]) -> str:
+                              task_goals: Sequence[Task]) -> str:
         obj_types = {}
         init_state_str = ''
 
