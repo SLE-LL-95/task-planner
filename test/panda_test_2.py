@@ -40,7 +40,7 @@ predicates = [('robotName',[('Robot','Frank')]),
               ('doorAt',[('Door','Fridge_Door'),('Waypoint','Kitchen')]),
               ('inside',[('Object0','Beer'),('Object1','Fridge')]),
               ('known',[('Person','Lou')])]
-fluents = [('robotAt',[('Robot','Frank')],"ROBOT_START_POSITION"),
+fluents = [('robotAt',[('Robot','Frank')],"DockingStation"),
            ('objectAt',[('Object','Beer')],'Kitchen'),
            ('personAt',[('Person', 'Lou')],'Couch')]
 
@@ -56,7 +56,7 @@ retval, plan = planner_interface.plan(task_request, 'Frank', task_goals)
 #output results
 print("\n\nActions:")
 for action in plan:
-    print(f"{action.type} {action.parameters}")
+    print("{} {}".format(action.type,action.parameters))
 
 #drop database
 if test_kb_name in client.list_database_names():

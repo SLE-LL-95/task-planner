@@ -52,8 +52,8 @@ class action_dipatcher:
         dispatch_msg = plan_dispatch_msgs.ActionDispatch()
         dispatch_msg.name = action.type
 
-        
-        arg_msg = diag_msgs.KeyValue()
-        arg_msg.key = 'bot'
-        arg_msg.value = self.robot_name
-        dispatch_msg.parameters.append(arg_msg)
+        for key in action.parameters:
+            arg_msg = diag_msgs.KeyValue()
+            arg_msg.key = key
+            arg_msg.value = action.parameters[key]
+            dispatch_msg.parameters.append(arg_msg)

@@ -11,7 +11,7 @@ class ActionModelLibrary(object):
         try:
             action = getattr(ActionModelLibrary, action_name)(action, action_params)
         except:
-            print(f"Action {action_name} not defined!")
+            print("Action {} not defined!".format(action_name))
             action = []
         return action
     

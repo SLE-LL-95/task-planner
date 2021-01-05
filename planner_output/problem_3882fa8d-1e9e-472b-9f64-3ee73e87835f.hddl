@@ -1,0 +1,34 @@
+(define (problem domestic)
+    (:domain default-domestic-domain)
+    (:objects
+        Kitchen DockingStation Couch - Waypoint
+        Frank - Robot
+        Beer Fridge - Object
+        Fridge - Furniture
+        Lou - Person
+        Fridge_Door - Door
+    )
+
+    (:htn
+        :parameters ()
+        :subtasks (and
+            (task0 (bring_object Lou Beer Frank))
+         )
+         :ordering ()
+    )
+
+    (:init
+        (robotName Frank)
+        (emptyGripper Frank)
+        (furnitureAt Fridge Kitchen)
+        (hasDoor Fridge)
+        (doorAt Fridge_Door Kitchen)
+        (inside Beer Fridge)
+        (known Lou)
+        (robotAt Frank DockingStation)
+        (objectAt Beer Kitchen)
+        (personAt Lou Couch)
+
+    )
+
+)

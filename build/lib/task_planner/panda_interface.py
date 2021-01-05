@@ -66,7 +66,8 @@ class PANDAInterface(TaskPlannerInterface):
         #Call Planner
         self.logger.info('Planning task...')
         print(self.planner_cmd)
-        planner_output=subprocess.run(planner_cmd_elements, capture_output=True)
+        #planner_output=subprocess.run(planner_cmd_elements, capture_output=True)
+        planner_output=subprocess.run(planner_cmd_elements,stdout=subprocess.PIPE)
 
         #catch error
         if(planner_output.stderr):
