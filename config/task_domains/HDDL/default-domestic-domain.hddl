@@ -214,10 +214,9 @@
         )
     )
 
-    (:action Place
-        :parameters (?Object - Object ?Plane - Plane ?Robot - Robot ?Waypoint - Waypoint ?Context - Context)
+    (:action PlaceOnPlane
+        :parameters (?Object - Object ?Plane - Plane ?Robot - Robot ?Waypoint - Waypoint)
         :precondition (and
-            ;(= ?Context place_on_plane)
             (robotAt ?Robot ?Waypoint)
             (planeAt ?Plane ?Waypoint)
             (holding ?Robot ?Object)
@@ -229,10 +228,9 @@
         )
     )
 
-    (:action Place
-        :parameters (?Object - Object ?Furniture - Furniture ?Robot - Robot ?Waypoint - Waypoint ?Context - Context)
+    (:action PlaceOnFurniture
+        :parameters (?Object - Object ?Furniture - Furniture ?Robot - Robot ?Waypoint - Waypoint)
         :precondition (and
-            ;(= ?Context place_in_container)
             (robotAt ?Robot ?Waypoint)
             (furnitureAt ?Furniture ?Waypoint)
             (holding ?Robot ?Object)
@@ -245,7 +243,7 @@
     )
 
     (:action Throw
-        :parameters (?Object0 ?Object1 - Object ?Robot - Robot ?Waypoint - Waypoint)
+        :parameters (?Object0 - Object ?Object1 - Object ?Robot - Robot ?Waypoint - Waypoint)
         :precondition (and
             (robotAt ?Robot ?Waypoint)
             (objectAt ?Object1 ?Waypoint)

@@ -10,14 +10,12 @@ import logging
 #TRY to get independent from ropod library!!
 #Define own Action Struct
 from ropod.structs.task import TaskRequest
-from ropod.structs.action import Action
-from ropod.structs.area import Area
+from action.action import Action
 
 from task_planner.planner_interface import TaskPlannerInterface
 from task_planner.knowledge_base_interface import Predicate, Task
 from task_planner.action_models_hddl import ActionModelLibrary
-from task_planner.knowledge_models_hddl import HDDLPredicateLibrary, HDDLFluentLibrary,\
-                                          HDDLNumericFluentLibrary
+from task_planner.knowledge_models_hddl import HDDLPredicateLibrary, HDDLFluentLibrary, HDDLNumericFluentLibrary
 
 
 class PANDAInterface(TaskPlannerInterface):
@@ -154,13 +152,17 @@ class PANDAInterface(TaskPlannerInterface):
         obj_type_str = '    (:objects\n{0}    )\n\n'.format(obj_type_str)
 
         # we generate a string with the planning goals of the form
-        # (:goals
-        #     (and
-        #         (predicate_1_name param_1 param_2 ... param_n)
-        #         ...
-        #         (predicate_n_name param_1 param_2 ... param_n)
-        #     )
+        # (:htn
+        #       :parameters()
+        #       :subtasks (and
+        #           (task1 param_1, ... , param_n)
+        #           (...)     
+        #           (taskn param_1, ... , parma_n)    
+        #       )
+        #       :ordering()
         # )
+        #TODO: Allow Task ordering
+
         goal_str = ''
         task_lines = ''
         for task_no,task_goal in enumerate(task_goals):
@@ -180,10 +182,10 @@ class PANDAInterface(TaskPlannerInterface):
         #     (:objects
         #         ...
         #     )
-        #     (:objects
+        #     (:htn
         #         ...
         #     )
-        #     (:htn
+        #     (:init
         #         ...
         #     )
         # )
@@ -270,12 +272,11 @@ class PANDAInterface(TaskPlannerInterface):
         action_parameter_string = action_parameter_string.replace(")","")
         action_parameter_string = action_parameter_string.replace("\n","")
 
-        #split paramters
+        #split parameters
         action_params = action_parameter_string.split(",")
 
         #Create Action from library
         action = ActionModelLibrary.get_action_model(action_name.upper(), action_params)
+        action.assign_parameters(action_params)
 
-        #print name and parameters (for debug only, remove later)
-        print(f"Name: {action_name} | Parameters: {action_params}")
         return action

@@ -10,14 +10,12 @@ import logging
 #TRY to get independent from ropod library!!
 #Define own Action Struct
 from ropod.structs.task import TaskRequest
-from ropod.structs.action import Action
-from ropod.structs.area import Area
+from action.action import Action
 
 from task_planner.planner_interface import TaskPlannerInterface
 from task_planner.knowledge_base_interface import Predicate, Task
 from task_planner.action_models_hddl import ActionModelLibrary
-from task_planner.knowledge_models_hddl import HDDLPredicateLibrary, HDDLFluentLibrary,\
-                                          HDDLNumericFluentLibrary
+from task_planner.knowledge_models_hddl import HDDLPredicateLibrary, HDDLFluentLibrary, HDDLNumericFluentLibrary
 
 
 class PANDAInterface(TaskPlannerInterface):
@@ -274,12 +272,11 @@ class PANDAInterface(TaskPlannerInterface):
         action_parameter_string = action_parameter_string.replace(")","")
         action_parameter_string = action_parameter_string.replace("\n","")
 
-        #split paramters
+        #split parameters
         action_params = action_parameter_string.split(",")
 
         #Create Action from library
         action = ActionModelLibrary.get_action_model(action_name.upper(), action_params)
+        action.assign_parameters(action_params)
 
-        #print name and parameters (for debug only, remove later)
-        print(f"Name: {action_name} | Parameters: {action_params}")
         return action

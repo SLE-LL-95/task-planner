@@ -54,9 +54,9 @@ task_goals = [('bring_object',[('p','Lou'),('o','Beer'),('r', 'Frank')])]
 retval, plan = planner_interface.plan(task_request, 'Frank', task_goals)
 
 #output results
-print("\n\nAction Names:")
+print("\n\nActions:")
 for action in plan:
-    print(action.type)
+    print(f"{action.type} {action.parameters}")
 
 #drop database
 if test_kb_name in client.list_database_names():
@@ -72,4 +72,5 @@ if test_kb_name in client.list_database_names():
 #      tasks and methods cannot be mixed! First define all tasks then all methods!
 #
 # If there is a syntax error in one of the files, the returned error message only makes few sense!
- 
+#
+# Panda Option:  -continueOnSolution may result in multiple solutions
