@@ -1,6 +1,8 @@
 import rospy
+import time
 import rosplan_dispatch_msgs.msg as plan_dispatch_msgs
 import diagnostic_msgs.msg as diag_msgs
+#import Action
 
 # Action Topic: 'action_dispatch_topic'
 #ROSPlan 'ActionDispatch.msg'
@@ -25,19 +27,22 @@ import diagnostic_msgs.msg as diag_msgs
 #status 'action achieved' or 'action failed'
 #information['action_name'] --> Action Name
 
-class action_dipatcher:
-    def __init__(self):
+class ActionDispatcher:
+    def __init__(self, timeout = 10):
+
+        rospy.init_node("Action_Dispatcher",anonymous = True)
 
         #create publischer for action dispatcher
         self.action_dispatch_pub = rospy.Publisher('/kcl_rosplan/action_dispatch',
                                                    plan_dispatch_msgs.ActionDispatch,
-                                                   queue_size=1)
-
+                                                   queue_size=1,
+                                                   latch = True)
         #subsribe to feedback topic
         rospy.Subscriber('/kcl_rosplan/action_feedback',
                          plan_dispatch_msgs.ActionFeedback,
                          self.get_action_feedback)
-        
+
+        self.timeout = timeout
         self.action_name = ''
         self.executing = False
         self.succeeded = False
@@ -50,6 +55,8 @@ class action_dipatcher:
     
     def dispatch_action(self, action):
         dispatch_msg = plan_dispatch_msgs.ActionDispatch()
+
+        self.action_name = action.type
         dispatch_msg.name = action.type
 
         for key in action.parameters:
@@ -57,3 +64,19 @@ class action_dipatcher:
             arg_msg.key = key
             arg_msg.value = action.parameters[key]
             dispatch_msg.parameters.append(arg_msg)
+
+        print("Dispatching Action {}".format(action.type))
+
+        self.action_dispatch_pub.publish(dispatch_msg)
+        self.executing = True
+        self.succeeded = False
+        start_time = time.time()
+        duration = 0.
+        while self.executing and duration < self.timeout:
+            rospy.sleep(0.1)
+            duration = time.time() - start_time
+
+        if self.succeeded:
+            return 'succeeded'
+        else:
+            return 'failed'

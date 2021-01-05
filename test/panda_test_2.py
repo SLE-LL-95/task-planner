@@ -5,6 +5,7 @@ import yaml
 
 from ropod.structs.task import TaskRequest
 from task_planner.panda_interface import PANDAInterface
+from action.action_dispatch import ActionDispatcher
 
 def get_planner_config(config_file_path):
     planner_config_params = None
@@ -62,6 +63,10 @@ for action in plan:
 if test_kb_name in client.list_database_names():
     client.drop_database(test_kb_name)
 
+#dispatch actions
+dispatcher = ActionDispatcher()
+for action in plan:
+    print(dispatcher.dispatch_action(action))
 
 #Notes:
 #Panda Planner is very sensitive to the format of Problem and Domain File:

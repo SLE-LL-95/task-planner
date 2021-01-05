@@ -12,3 +12,6 @@ config/problem_*
 
 # installation path
 dist/*
+
+# build files
+build/*

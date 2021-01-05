@@ -17,13 +17,13 @@ Run PANDA with the command line argument -contributors for an extensive list.
 Run it with -help for more information like available options.
 
 
-PANDA was called with: "config/task_domains/HDDL/default-domestic-domain.hddl planner_output/problem_681e7b73-a51f-4feb-838a-a5457188c413.hddl"
+PANDA was called with: "config/task_domains/HDDL/default-domestic-domain.hddl planner_output/problem_9c6d3784-89c6-4f26-882b-99e31b3ddf79.hddl"
 
 
 Planner Configuration
 =====================
 Domain: config/task_domains/HDDL/default-domestic-domain.hddl
-Problem: planner_output/problem_681e7b73-a51f-4feb-838a-a5457188c413.hddl
+Problem: planner_output/problem_9c6d3784-89c6-4f26-882b-99e31b3ddf79.hddl
 Output: none
 
 Planning Configuration
@@ -77,7 +77,7 @@ Planning Configuration
 	search result
 	timings
 	statistics
-#0 "00 global:01:problem"="problem_681e7b73-a51f-4feb-838a-a5457188c413.hddl";"00 global:00:domain"="default-domestic-domain.hddl"
+#0 "00 global:01:problem"="problem_9c6d3784-89c6-4f26-882b-99e31b3ddf79.hddl";"00 global:00:domain"="default-domestic-domain.hddl"
 Parsing domain ... using HDDL parser ... done
 Preparing internal domain representation ... done.
 Initial domain
@@ -124,7 +124,7 @@ Lifted reachability analysis and domain cleanup ... done.
 	number of epsilon methods = 0
 	number of primitive tasks = 5
 	number of constants = 12
-Grounded planning graph ... done in 146ms.
+Grounded planning graph ... done in 148ms.
 	Number of Grounded Actions 14
 	Number of Grounded Literals 13
 	number of abstract tasks = 4
@@ -171,7 +171,7 @@ Removing unnecessary predicates ... done.
 	number of primitive tasks = 7
 	number of constants = 0
 Omitting lifted reachability analysis ... 
-Grounded planning graph ... done in 15ms.
+Grounded planning graph ... done in 9ms.
 	Number of Grounded Actions 7
 	Number of Grounded Literals 7
 	number of abstract tasks = 4
@@ -229,7 +229,7 @@ Removing unnecessary predicates ... done.
 	number of primitive tasks = 7
 	number of constants = 0
 Omitting lifted reachability analysis ... 
-Grounded planning graph ... done in 8ms.
+Grounded planning graph ... done in 2ms.
 	Number of Grounded Actions 7
 	Number of Grounded Literals 7
 	number of abstract tasks = 2
@@ -293,14 +293,14 @@ Domain is regular: false
 Domain is tail recursive: true
 Domain is totally ordered: true
 Domain has last task in all methods: true
-Time remaining for planner 9223372036854773693ms
+Time remaining for planner 9223372036854773795ms
 Reducing flat domain ... done.
  - Reduced number of operators from 7 to 7
  - Reduced number of state-bits from 6 to 6
 Generating Relaxed Composition Model ...
 Calculating top down reachability ...
  - Found 9 SCCs with up to 1 tasks.
- - Reachability calculated in 0 ms.
+ - Reachability calculated in 1 ms.
  - model has 11 operators
  - model has 22 state features
  - operators' mean count of (pre, add, del) = (2.27, 1.45, 0.55)
@@ -332,7 +332,7 @@ It contains 7 modifications, including 5 actions.
 Panda says: SOLUTION
 ============ global ============
 randomseed     = 42
-peak memory    = 41177896
+peak memory    = 41148920
 planner result = SOLUTION
 ============ properties ============
 acyclic                  = true
@@ -363,40 +363,40 @@ numPrimTasks           = 5
 numShopTasks           = 0
 numDecompositions      = 2
 findShortestPlan       = 0
-foundShortestPlanAfter = 1
-foundFirstPlanAfter    = 1
+foundShortestPlanAfter = 2
+foundFirstPlanAfter    = 2
 foundPlans             = 1
 
 ----------------- TIMINGS -----------------
 ============ total ============
-total = 2139
+total = 2033
 ============ parsing ============
-total                         = 853
-file parser                   = 573
-sort expansion                = 110
-closed world assumption       = 70
+total                         = 1040
+file parser                   = 635
+sort expansion                = 153
+closed world assumption       = 123
 inherit preconditions         = 0
-shop methods                  = 3
-eliminate identical variables = 43
-strip domain of hybridity     = 3
-flatten formula               = 51
+shop methods                  = 2
+eliminate identical variables = 65
+strip domain of hybridity     = 2
+flatten formula               = 58
 ============ preprocessing ============
-total                                      = 1183
-compile negative preconditions             = 122
+total                                      = 944
+compile negative preconditions             = 82
 compile unit methods                       = 0
-split parameter                            = 169
-expand choiceless abstract tasks           = 66
+split parameter                            = 170
+expand choiceless abstract tasks           = 31
 compile methods with identical tasks       = 0
-removing unnecessary predicates            = 33
-lifted reachabiltiy analysis               = 116
-grounded planning graph analysis           = 343
-grounded task decomposition graph analysis = 221
-grounding                                  = 82
-create artificial top task                 = 6
+removing unnecessary predicates            = 17
+lifted reachabiltiy analysis               = 148
+grounded planning graph analysis           = 323
+grounded task decomposition graph analysis = 106
+grounding                                  = 37
+create artificial top task                 = 3
 ============ progression ============
 searchTime = 2
 
-#1 "30 problem:05:number of primitive actions"="7";"30 problem:01:number of constants"="0";"30 problem:04:number of abstract actions"="2";"02 properties:04:tail recursive"="true";"30 progression:04:numSearchNodes"="10";"30 progression:06:numPrimTasks"="5";"00 global:80:peak memory"="41177896";"30 progression:93:foundFirstPlanAfter"="1";"02 properties:02:mostly acyclic"="true";"30 problem:06:number of methods"="4";"30 problem:07:number of primitive shop actions"="0";"02 properties:05:totally ordered"="true";"02 properties:06:last task in all methods"="true";"30 problem:03:number of actions"="9";"30 problem:08:number of primitive non-shop actions"="7";"30 problem:02:number of predicates"="7";"30 progression:01:status"="solved";"30 progression:03:heuristic"="hhRelataxedComposition-with-hFF-EQ";"30 problem:10:average method size"="2";"02 properties:03:regular"="false";"30 problem:09:size of largest method"="5";"30 progression:08:numDecompositions"="2";"00 global:90:planner result"="SOLUTION";"02 properties:01:acyclic"="true";"30 progression:02:aStar"="1";"30 progression:92:foundShortestPlanAfter"="1";"10 search nodes:99:search space fully explored"="true";"00 global:02:randomseed"="42";"30 progression:07:numShopTasks"="0";"30 progression:91:findShortestPlan"="0";"30 progression:94:foundPlans"="1";"01 parsing:01:file parser"="573";"01 parsing:08:flatten formula"="51";"02 preprocessing:07:compile methods with identical tasks"="0";"01 parsing:07:strip domain of hybridity"="3";"02 preprocessing:08:removing unnecessary predicates"="33";"01 parsing:03:closed world assumption"="70";"02 preprocessing:11:lifted reachabiltiy analysis"="116";"01 parsing:02:sort expansion"="110";"01 parsing:00:total"="853";"30 progression:01:searchTime"="2";"01 parsing:04:inherit preconditions"="0";"02 preprocessing:01:compile negative preconditions"="122";"00 total:00:total"="2139";"02 preprocessing:12:grounded planning graph analysis"="343";"02 preprocessing:02:compile unit methods"="0";"02 preprocessing:23:grounded task decomposition graph analysis"="221";"02 preprocessing:04:split parameter"="169";"01 parsing:05:shop methods"="3";"01 parsing:06:eliminate identical variables"="43";"02 preprocessing:05:expand choiceless abstract tasks"="66";"02 preprocessing:00:total"="1183";"02 preprocessing:99:create artificial top task"="6";"02 preprocessing:84:grounding"="82"
+#1 "30 problem:05:number of primitive actions"="7";"30 problem:01:number of constants"="0";"30 problem:04:number of abstract actions"="2";"02 properties:04:tail recursive"="true";"30 progression:04:numSearchNodes"="10";"30 progression:06:numPrimTasks"="5";"00 global:80:peak memory"="41148920";"30 progression:93:foundFirstPlanAfter"="2";"02 properties:02:mostly acyclic"="true";"30 problem:06:number of methods"="4";"30 problem:07:number of primitive shop actions"="0";"02 properties:05:totally ordered"="true";"02 properties:06:last task in all methods"="true";"30 problem:03:number of actions"="9";"30 problem:08:number of primitive non-shop actions"="7";"30 problem:02:number of predicates"="7";"30 progression:01:status"="solved";"30 progression:03:heuristic"="hhRelataxedComposition-with-hFF-EQ";"30 problem:10:average method size"="2";"02 properties:03:regular"="false";"30 problem:09:size of largest method"="5";"30 progression:08:numDecompositions"="2";"00 global:90:planner result"="SOLUTION";"02 properties:01:acyclic"="true";"30 progression:02:aStar"="1";"30 progression:92:foundShortestPlanAfter"="2";"10 search nodes:99:search space fully explored"="true";"00 global:02:randomseed"="42";"30 progression:07:numShopTasks"="0";"30 progression:91:findShortestPlan"="0";"30 progression:94:foundPlans"="1";"01 parsing:01:file parser"="635";"01 parsing:08:flatten formula"="58";"02 preprocessing:07:compile methods with identical tasks"="0";"01 parsing:07:strip domain of hybridity"="2";"02 preprocessing:08:removing unnecessary predicates"="17";"01 parsing:03:closed world assumption"="123";"02 preprocessing:11:lifted reachabiltiy analysis"="148";"01 parsing:02:sort expansion"="153";"01 parsing:00:total"="1040";"30 progression:01:searchTime"="2";"01 parsing:04:inherit preconditions"="0";"02 preprocessing:01:compile negative preconditions"="82";"00 total:00:total"="2033";"02 preprocessing:12:grounded planning graph analysis"="323";"02 preprocessing:02:compile unit methods"="0";"02 preprocessing:23:grounded task decomposition graph analysis"="106";"02 preprocessing:04:split parameter"="170";"01 parsing:05:shop methods"="2";"01 parsing:06:eliminate identical variables"="65";"02 preprocessing:05:expand choiceless abstract tasks"="31";"02 preprocessing:00:total"="944";"02 preprocessing:99:create artificial top task"="3";"02 preprocessing:84:grounding"="37"
 SOLUTION SEQUENCE
 0: MoveBase(Frank,DockingStation,Kitchen)
 1: Open(Fridge_Door,Frank,Kitchen)
