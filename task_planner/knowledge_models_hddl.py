@@ -7,6 +7,7 @@ class HDDLKnowledgeUtils(object):
         param_list = []
         param_count = 0
         updated_obj_types = dict(obj_types)
+        iter_count=0
         while param_count < len(params):
             for param in params:
                 param_name = param_order[param_count][0]
@@ -20,6 +21,13 @@ class HDDLKnowledgeUtils(object):
                     if param.value not in updated_obj_types[param_type]:
                         updated_obj_types[param_type].append(param.value)
                     break
+            
+            #Avoid endless loop if a parameter was not spelled correclty!
+            iter_count += 1
+            if(iter_count > (len(params))):
+                raise Exception("Please check correct spelling of predicate/fluent parameters!") 
+        
+           
         return param_list, updated_obj_types
 
 

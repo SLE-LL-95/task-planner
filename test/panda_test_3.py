@@ -31,8 +31,6 @@ client = pm.MongoClient(host=host, port=port)
 if test_kb_name in client.list_database_names():
     client.drop_database(test_kb_name)
 
-if test_kb_name in client.list_database_names():
-    client.drop_database(test_kb_name)
 
 planner_config_params = get_planner_config('/mnt/DATEN/Dokumente/Master_Autonomous_Systems/3rd_Semester/Software_Development_Project/HDDL_Parser/Python_Approach/Code/task-planner/config/panda_config.yaml')
 domain_file = planner_config_params['domain_file']
@@ -43,22 +41,20 @@ planner_interface = PANDAInterface(test_kb_name, domain_file, planner_cmd, plan_
 #Knowledge--------------------------------------------------------------------
 predicates = [('robotName',[('Robot','Frank')]),
               ('emptyGripper',[('Robot','Frank')]),
-              ('furnitureAt',[('Furniture','Fridge'),('Waypoint','Kitchen')]),
-              ('hasDoor',[('Furniture', 'Fridge')]),
-              ('doorAt',[('Door','Fridge_Door'),('Waypoint','Kitchen')]),
-              ('doorAt',[('Door','DummyDoor'),('Waypoint','Somewhere')]),
-              ('inside',[('Object0','Beer'),('Object1','Fridge')]),
-              ('known',[('Person','Lou')])]
-fluents = [('robotAt',[('Robot','Frank')],"DockingStation"),
+              ('planeAt',[('Plane','Table'),('Waypoint','Kitchen')]),
+              ('unexplored',[('Plane','Table')]),
+              ('onTopOf',[('Object0','Beer'),('Object1','Table')]),
+              ('known',[('Person','Alex')])]
+fluents = [('robotAt',[('Robot','Frank')],'DockingStation'),
            ('objectAt',[('Object','Beer')],'Kitchen'),
-           ('personAt',[('Person', 'Lou')],'Couch')]
+           ('personAt',[('Person', 'Alex')],'LivingRoom')]
 
 planner_interface.kb_interface.insert_facts(predicates)
 planner_interface.kb_interface.insert_fluents(fluents)
 
 #Task Definition---------------------------------------------------------------
 task_request = TaskRequest()
-task_goals = [('bring_object',[('p','Lou'),('o','Beer'),('r', 'Frank')])]
+task_goals = [('bring_object',[('p','Alex'),('o','Beer'),('r', 'Frank')])]
 
 retval, plan = planner_interface.plan(task_request, 'Frank', task_goals)
 
@@ -74,7 +70,7 @@ if test_kb_name in client.list_database_names():
 #dispatch actions
 dispatcher = ActionDispatcher()
 for action in plan:
-    print(dispatcher.dispatch_action(action))
+    print(dispatcher.dispatch_action(action,timeout=10))
 
 #Notes:
 #Panda Planner is very sensitive to the format of Problem and Domain File:

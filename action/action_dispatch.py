@@ -41,19 +41,24 @@ class ActionDispatcher:
         #subsribe to feedback topic
         rospy.Subscriber('/kcl_rosplan/action_feedback',
                          plan_dispatch_msgs.ActionFeedback,
-                         self.get_action_feedback)
+                         self._get_action_feedback)
 
         self.action_name = ''
         self.executing = False
         self.succeeded = False
 
-    def get_action_feedback(self, msg):
+    def _get_action_feedback(self, msg):
         if msg.information and msg.information[0].key == 'action_name' and \
         msg.information[0].value == self.action_name:
             self.executing = False
             self.succeeded = (msg.status == 'action achieved')
     
     def dispatch_action(self, action, timeout=10):
+        '''
+        Dispatch Action <action>. 
+        Wait for success for <timeout> seconds.
+        Return 'succeeded' or 'failed'
+        '''
 
         #create dispatch message
         dispatch_msg = plan_dispatch_msgs.ActionDispatch()

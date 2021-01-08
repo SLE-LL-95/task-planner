@@ -52,6 +52,7 @@ class PANDAInterface(TaskPlannerInterface):
         kb_predicate_assertions = self.kb_interface.get_predicate_assertions()
         kb_fluent_assertions = self.kb_interface.get_fluent_assertions()
 
+        print("Generating Problem File...")
         self.logger.info('Generating problem file')
         problem_file = self.generate_problem_file(kb_predicate_assertions,
                                                   kb_fluent_assertions,
@@ -64,6 +65,7 @@ class PANDAInterface(TaskPlannerInterface):
         planner_cmd_elements = self.planner_cmd.split()
 
         #Call Planner
+        print("Planning Task...")
         self.logger.info('Planning task...')
         print(self.planner_cmd)
         #planner_output=subprocess.run(planner_cmd_elements, capture_output=True)
@@ -82,9 +84,11 @@ class PANDAInterface(TaskPlannerInterface):
         text_file.close()
         self.logger.info('Planning finished')
 
+        print("Parsing Plan...")
         self.logger.info('Parsing plans...')
         plan_found, plan = self.parse_plan(task_request.load_type, robot)
 
+        print("Removing Problem File...")
         self.logger.info('Removing problem file...')
         os.remove(problem_file)
         self.logger.info('Planner done')
@@ -96,7 +100,8 @@ class PANDAInterface(TaskPlannerInterface):
                               task_goals: Sequence[Task]) -> str:
         obj_types = {}
         init_state_str = ''
-
+        
+        print("Reading Predicate Assertions...")
         # we generate strings from the predicate assertions of the form
         # (predicate_name param_1 param_2 ... param_n)
         for assertion in predicate_assertions:
@@ -106,7 +111,7 @@ class PANDAInterface(TaskPlannerInterface):
             assertion_str = '        ({0} {1})\n'.format(assertion.name, ' '.join(ordered_param_list))
             init_state_str += assertion_str
 
-
+        print("Reading Fluent Assertions...")
         # for numeric fluents, we generate strings of the form
         # (= (fluent_name param_1 param_2 ... param_n) fluent_value); otherwise,
         # we generate strings just like for predicate assertions
@@ -141,6 +146,7 @@ class PANDAInterface(TaskPlannerInterface):
         # )
         init_state_str = '    (:init\n{0}\n    )\n\n'.format(init_state_str)
 
+        print("Generating Objects List...")
         # we generate a string with the object types of the form
         # (:objects
         #     obj_11 obj_12 - type_1
@@ -151,7 +157,8 @@ class PANDAInterface(TaskPlannerInterface):
         for obj_type in obj_types:
             obj_type_str += '        {0} - {1}\n'.format(' '.join(obj_types[obj_type]), obj_type)
         obj_type_str = '    (:objects\n{0}    )\n\n'.format(obj_type_str)
-
+        
+        print("Generating Goal String...")
         # we generate a string with the planning goals of the form
         # (:htn
         #       :parameters()
@@ -177,6 +184,8 @@ class PANDAInterface(TaskPlannerInterface):
         goal_str += '         )\n'
         goal_str += '         :ordering ()\n'
         goal_str += '    )\n\n'
+
+        print("Writing Problem File...")
         # we finally write the problem file, which will be in the format
         # (define (problem problem-name)
         #     (:domain domain-name)
@@ -241,7 +250,9 @@ class PANDAInterface(TaskPlannerInterface):
                         self.logger.debug(action_line)
                         plan_action_strings.append(action_line)
                         new_action = self.process_action_str(action_line)
-                        plan.append(new_action)
+
+                        if new_action != None:
+                            plan.append(new_action)
                     else:
                         print("Something is not as usual!")
 
@@ -269,6 +280,10 @@ class PANDAInterface(TaskPlannerInterface):
         #split name/parameters
         action_name, action_parameter_string = action_line.split("(")
 
+        #if a method has a precondition, it appears as SHOP_method in the plan
+        #we can just ignore this line
+        if (action_name.startswith('SHOP_method')):
+            return None
         #remove closing brace and newline character
         action_parameter_string = action_parameter_string.replace(")","")
         action_parameter_string = action_parameter_string.replace("\n","")

@@ -92,7 +92,7 @@
         )
     )
 
-    (:method m_open_door
+    (:method m_open_std_door
         :parameters (?d - Door ?r - Robot ?loc - Location)
         :task (open_door ?loc)
         :subtasks (and
@@ -101,11 +101,10 @@
     )
 
     (:method m_open_no_door
-        :parameters (?loc - Location)
+        :parameters (?d - Door ?r - Robot ?loc - Location)
         :task (open_door ?loc)
-        :subtasks (and
-            (task0 (N_Open ?loc))
-        )
+        :precondition (forall (?dx - Door) (not (doorAt ?dx ?loc)))
+        :subtasks ()
     )
 
     (:method m_random_object
@@ -138,6 +137,40 @@
         )
     )
 
+    (:method m_bring_object_plane_unknown
+        :parameters (?p - Person ?o - Object ?r - Robot ?p_loc - Location ?o_loc - Location ?r_loc - Location ?plane - Plane)
+        :task (bring_object ?p ?o ?r)
+        :subtasks (and
+            (task0 (MoveBase ?r ?r_loc ?o_loc))
+            (task1 (PerceivePlane ?plane ?r ?o_loc))
+            (task2 (pick ?o ?plane ?r ?o_loc))
+            (task3 (MoveBase ?r ?o_loc ?p_loc))
+            (task4 (HandOver ?o ?r ?p ?p_loc))
+        )
+        :ordering(and
+            (task0 < task1)
+	        (task1 < task2)
+            (task2 < task3)
+            (task3 < task4)
+        )
+    )
+
+     (:method m_bring_object_plane_known
+        :parameters (?p - Person ?o - Object ?r - Robot ?p_loc - Location ?o_loc - Location ?r_loc - Location ?plane - Plane)
+        :task (bring_object ?p ?o ?r)
+        :subtasks (and
+            (task0 (MoveBase ?r ?r_loc ?o_loc))
+            (task1 (pick ?o ?plane ?r ?o_loc))
+            (task2 (MoveBase ?r ?o_loc ?p_loc))
+            (task3 (HandOver ?o ?r ?p ?p_loc))
+        )
+        :ordering(and
+            (task0 < task1)
+	        (task1 < task2)
+            (task2 < task3)
+        )
+    )
+
     (:action MoveBase
         :parameters (?Robot - Robot ?Location0 ?Location1 - Location)
         :precondition (and
@@ -158,16 +191,6 @@
         :effect (and
             (doorOpen ?Door)
         )
-    )
-
-    (:action N_Open
-        :parameters (?loc - Location)
-        :precondition (and
-            (forall (?d - Door)
-                (not (doorAt ?d ?loc))
-            )
-        )        
-        :effect ()
     )
 
     (:action PerceivePlane

@@ -24,45 +24,39 @@ class ActionModelLibrary(object):
     def OPEN(action: Action, params: list) -> Action:
         action.parameter_order = ['Door','Robot','Waypoint']
         return action
-    
-    @staticmethod
-    def N_OPEN(action: Action, params: list) -> Action:
-        action.parameter_order = ['Door','Robot','Waypoint']
-        return action
-    
+        
     @staticmethod
     def PERCEIVEPLANE(action: Action, params: list) -> Action:
         action.parameter_order = ['Plane','Robot','Waypoint']
         return action
 
-    #TODO:  Replace Pick/Place from/on Plane/Furniture by one action with 'Context' parameter
-    #       Depending on 'Context', assign correct parameter order
-    #       eg: 
-    #       if(params[4] == 'pick_from_furniture'): 
-    #           action.parameter_order = xxx
-    #       elif (params[4] == 'pick_from_plane'):
-    #          action.parameter_order = yyy
-
     @staticmethod
     def PICKFROMFURNITURE(action: Action, params: list) -> Action:
         action.parameter_order = ['Object','Furniture','Robot','Waypoint']
+        action.type = 'PICK'
+        action.parameters['Context'] = 'pick_from_plane'
         return action
     
     @staticmethod
     def PICKFROMPLANE(action: Action, params: list) -> Action:
         action.parameter_order = ['Object','Plane','Robot','Waypoint']
+        action.type = 'PICK'
+        action.parameters['Context'] = 'pick_from_container'
         return action
     
     @staticmethod
     def PLACEONPLANE(action: Action, params: list) -> Action:
         action.parameter_order = ['Object','Plane','Robot','Waypoint']
+        action.type = 'PLACE'
+        action.parameters['Context'] = 'place_on_plane'
         return action
     
     @staticmethod
     def PLACEONFURNITURE(action: Action, params: list) -> Action:
         action.parameter_order = ['Object','Furniture','Robot','Waypoint']
+        action.type = 'PLACE'
+        action.parameters['Context'] = 'place_in_container'
         return action
-    #---------------------------------------------------------------------------------------
 
     @staticmethod
     def THROW(action: Action, params: list) -> Action:
