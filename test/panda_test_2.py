@@ -48,7 +48,8 @@ predicates = [('robotName',[('Robot','Frank')]),
               ('doorAt',[('Door','Fridge_Door'),('Waypoint','Kitchen')]),
               ('doorAt',[('Door','DummyDoor'),('Waypoint','Somewhere')]),
               ('inside',[('Object0','Beer'),('Object1','Fridge')]),
-              ('known',[('Person','Lou')])]
+              ('known',[('Person','Lou')]),
+              ('unscanned',[('Person','Lou')])]
 fluents = [('robotAt',[('Robot','Frank')],"DockingStation"),
            ('objectAt',[('Object','Beer')],'Kitchen'),
            ('personAt',[('Person', 'Lou')],'Couch')]

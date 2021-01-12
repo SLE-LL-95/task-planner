@@ -44,7 +44,8 @@ predicates = [('robotName',[('Robot','Frank')]),
               ('planeAt',[('Plane','Table'),('Waypoint','Kitchen')]),
               ('unexplored',[('Plane','Table')]),
               ('onTopOf',[('Object0','Beer'),('Object1','Table')]),
-              ('known',[('Person','Alex')])]
+              ('known',[('Person','Alex')]),
+              ('unscanned',[('Person','Alex')])]
 fluents = [('robotAt',[('Robot','Frank')],'DockingStation'),
            ('objectAt',[('Object','Beer')],'Kitchen'),
            ('personAt',[('Person', 'Alex')],'LivingRoom')]

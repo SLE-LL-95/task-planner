@@ -35,6 +35,8 @@
         (emptyGripper ?Robot - Robot)
         (known ?Person - Person)
         (unknown ?Person - Person)
+        (scanned ?Person - Person)
+        (unscanned ?Person - Person)
 
         (canPlaceOn ?Object - Object ?Plane - Plane)
         (defaultStoringLocation ?Object - Object ?Furniture - Furniture)
@@ -74,6 +76,49 @@
         :parameters (?p - Person ?o - Object ?r - Robot)
         :precondition ()
         :effect ()
+    )
+
+    (:task scan_person
+        :parameters (?p - Person ?r - Robot ?wp - Waypoint)
+        :precondition ()
+        :effect ()
+    )
+
+    (:task perceive_plane
+        :parameters (?plane - Plane ?r - Robot ?wp - Waypoint)
+        :precondition ()
+        :effect ()
+    )
+
+    (:method m_perceive_plane_unexplored
+        :parameters(?plane - Plane ?r - Robot ?wp - Waypoint)
+        :task(perceive_plane ?plane ?r ?wp)
+        :subtasks (and
+            (task0 (PerceivePlane ?plane ?r ?wp))
+        )
+    )
+
+    (:method m_perceive_plane_already_explored
+        :parameters(?plane - Plane ?r - Robot ?wp - Waypoint)
+        :task(perceive_plane ?plane ?r ?wp)
+        :precondition (explored ?plane)
+        :subtasks ()
+    )
+
+
+    (:method m_scan_person_unscanned
+        :parameters(?p - Person ?r - Robot ?wp - Waypoint)
+        :task(scan_person ?p ?r ?wp)
+        :subtasks (and
+            (task0 (FindPeople ?p ?r ?wp))
+        )
+    )
+
+    (:method m_scan_person_already_scanned
+        :parameters(?p - Person ?r - Robot ?wp - Waypoint)
+        :task(scan_person ?p ?r ?wp)
+        :precondition (scanned ?p)
+        :subtasks ()
     )
 
     (:method m_pick_from_plane
@@ -127,47 +172,35 @@
             (task1 (open_door ?o_loc))
             (task2 (pick ?o ?furniture ?r ?o_loc))
             (task3 (MoveBase ?r ?o_loc ?p_loc))
-            (task4 (HandOver ?o ?r ?p ?p_loc))
+            (task4 (scan_person ?p ?r ?p_loc))
+            (task5 (HandOver ?o ?r ?p ?p_loc))
         )
         :ordering(and
             (task0 < task1)
 	        (task1 < task2)
             (task2 < task3)
             (task3 < task4)
+            (task4 < task5)
         )
     )
 
-    (:method m_bring_object_plane_unknown
+    (:method m_bring_object_plane
         :parameters (?p - Person ?o - Object ?r - Robot ?p_loc - Location ?o_loc - Location ?r_loc - Location ?plane - Plane)
         :task (bring_object ?p ?o ?r)
         :subtasks (and
             (task0 (MoveBase ?r ?r_loc ?o_loc))
-            (task1 (PerceivePlane ?plane ?r ?o_loc))
+            (task1 (perceive_plane ?plane ?r ?o_loc))
             (task2 (pick ?o ?plane ?r ?o_loc))
             (task3 (MoveBase ?r ?o_loc ?p_loc))
-            (task4 (HandOver ?o ?r ?p ?p_loc))
+            (task4 (scan_person ?p ?r ?p_loc))
+            (task5 (HandOver ?o ?r ?p ?p_loc))
         )
         :ordering(and
             (task0 < task1)
 	        (task1 < task2)
             (task2 < task3)
             (task3 < task4)
-        )
-    )
-
-     (:method m_bring_object_plane_known
-        :parameters (?p - Person ?o - Object ?r - Robot ?p_loc - Location ?o_loc - Location ?r_loc - Location ?plane - Plane)
-        :task (bring_object ?p ?o ?r)
-        :subtasks (and
-            (task0 (MoveBase ?r ?r_loc ?o_loc))
-            (task1 (pick ?o ?plane ?r ?o_loc))
-            (task2 (MoveBase ?r ?o_loc ?p_loc))
-            (task3 (HandOver ?o ?r ?p ?p_loc))
-        )
-        :ordering(and
-            (task0 < task1)
-	        (task1 < task2)
-            (task2 < task3)
+            (task4 < task5)
         )
     )
 
@@ -289,6 +322,19 @@
         :effect (and
             (not (holding ?Robot ?Object))
             (holding ?Person ?Object)
+        )
+    )
+
+    (:action FindPeople
+        :parameters (?Person - Person ?Robot - Robot ?Waypoint - Waypoint)
+        :precondition (and
+            (robotAt ?Robot ?Waypoint)
+            (personAt ?Person ?Waypoint)
+            (unscanned ?Person)
+        )
+        :effect (and
+            (not (unscanned ?Person))
+            (scanned ?Person)
         )
     )
 )

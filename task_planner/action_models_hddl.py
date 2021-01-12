@@ -34,14 +34,14 @@ class ActionModelLibrary(object):
     def PICKFROMFURNITURE(action: Action, params: list) -> Action:
         action.parameter_order = ['Object','Furniture','Robot','Waypoint']
         action.type = 'PICK'
-        action.parameters['Context'] = 'pick_from_plane'
+        action.parameters['Context'] = 'pick_from_container'
         return action
     
     @staticmethod
     def PICKFROMPLANE(action: Action, params: list) -> Action:
         action.parameter_order = ['Object','Plane','Robot','Waypoint']
         action.type = 'PICK'
-        action.parameters['Context'] = 'pick_from_container'
+        action.parameters['Context'] = 'pick_from_plane'
         return action
     
     @staticmethod
@@ -66,4 +66,9 @@ class ActionModelLibrary(object):
     @staticmethod
     def HANDOVER(action: Action, params: list) -> Action:
         action.parameter_order = ['Object','Robot','Person','Waypoint']
+        return action
+
+    @staticmethod
+    def FINDPEOPLE(action: Action, params: list) -> Action:
+        action.parameter_order = ['Person','Robot','Waypoint']
         return action

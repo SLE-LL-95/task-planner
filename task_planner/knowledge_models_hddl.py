@@ -98,7 +98,6 @@ class HDDLPredicateLibrary(object):
         return HDDLKnowledgeUtils.get_ordered_param_list(params, param_order, obj_types)
     
     @staticmethod
-    #Why? not known != unknown??
     def unknown(params: list, obj_types: dict) -> Tuple[list, dict]:
         param_order = {0: ('Person', 'Person')}
         return HDDLKnowledgeUtils.get_ordered_param_list(params, param_order, obj_types)
@@ -148,6 +147,15 @@ class HDDLPredicateLibrary(object):
         param_order = {0: ('Object0', 'Object'), 1: ('Object1','Object')}
         return HDDLKnowledgeUtils.get_ordered_param_list(params, param_order, obj_types)
     
+    @staticmethod
+    def scanned(params: list, obj_types: dict) -> Tuple[list, dict]:
+        param_order = {0: ('Person', 'Person')}
+        return HDDLKnowledgeUtils.get_ordered_param_list(params, param_order, obj_types)
+
+    @staticmethod
+    def unscanned(params: list, obj_types: dict) -> Tuple[list, dict]:
+        param_order = {0: ('Person', 'Person')}
+        return HDDLKnowledgeUtils.get_ordered_param_list(params, param_order, obj_types)
 
 class HDDLFluentLibrary(object):
     @staticmethod
