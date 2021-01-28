@@ -21,7 +21,7 @@
 
 Defines a package (`task_planner`) that exposes interfaces to a knowledge base and a task planner.
 
-Both [LAMA](https://arxiv.org/abs/1401.3839) and [Metric-FF](https://arxiv.org/abs/1106.5271) are currently supported.
+[LAMA](https://arxiv.org/abs/1401.3839), [Metric-FF](https://arxiv.org/abs/1106.5271) and [PANDA](https://www.uni-ulm.de/en/in/ki/research/software/panda/) are currently supported.
 
 Parameters for the planner are specified in `config/planner_config.yaml`; in particular, the following parameters need to be specified:
 * `planner_name`: Name of the used planner
@@ -42,6 +42,7 @@ Note: The package is developed for Python 3.5+ since it makes use of Python typi
 
 The task planner is based on the following assumptions:
 * A planner working with PDDL domains is used
+* The PANDA Planner uses HDDL domains
 * The parameters of the domain predicates, fluents, and actions are explicitly typed
 * Only single-robot planning is done
 
@@ -100,7 +101,9 @@ kb_interface.remove_fluents(fluents_to_remove)
 
 Note that a fluent is also represented as a tuple, but with three entries instead of two, such that the first entry is the fluent name, the second a list of predicate parameters ("name" and "value" pairs), and the third the fluent value.
 
-Planning goals can be inserted/removed just as facts, only that the function calls change (`insert_goals` and `remove_goals` respectively). Note that only predicates can be inserted as planning goals.
+Planning goals can be inserted/removed just as facts, only that the function calls change (`insert_goals` and `remove_goals` respectively). Note that only predicates can be inserted as planning goals. Not valid for HTN Domain (PANDA)
+
+For HTN Domains the goal state is not described by predicates, but by tasks to be performed. A task can be defined by tuple or dictionary similar to a predicate. Adding tasks to the database is currently not supported (tasks are created when calling the planner).
 
 For a list of defined predicates and fluents, please consult the [knowledge_models](task_planner/knowledge_models.py) collection of domain mappings.
 
@@ -148,9 +151,11 @@ For setting up the LAMA planner, execute the install script:
 
 For Metric-FF, the executable can be downloaded from the home page of the planner: https://fai.cs.uni-saarland.de/hoffmann/metric-ff.html
 
+For the PANDA planner, there is also an install script similar to LAMA.
+
 ## Tests
 
-Unit tests are included under [test](test) (currently only for the LAMA planner).
+Unit tests are included under [test](test) (currently only for the LAMA planner; a few simple test cases for the PANDA planner, not using the unittest module, are also available).
 
 ## API description
 
@@ -159,6 +164,7 @@ Unit tests are included under [test](test) (currently only for the LAMA planner)
 The task planner exposes functionalities for creating a task plan given a task request and a robot task assignment. The package includes a generic interface definition - the abstract `TaskPlannerInterface` class in [`task_planner/planner_interface.py`](task_planner/planner_interface.py) - as well as planner-specific implementations, namely:
 * the `LAMAInterface` class in [`task_planner/lama_interface.py`](task_planner/lama_interface.py)
 * the `MetricFFInterface` class in [`task_planner/metric_ff_interface.py`](task_planner/metric_ff_interface.py)
+* the `PANDAInterface` class in [`task_planner/metric_ff_interface.py`](task_planner/panda_interface.py)
 
 #### TaskPlannerInterface
 
@@ -219,6 +225,10 @@ The following methods are exposed by the `Predicate` class:
 * `from_dict` (static): Creates a `Predicate` object from a given predicate dictionary (in the form returned by `to_dict`)
 * `__eq__`: The comparison operator is overridden for comparing two `Predicate` objects; returns True if both the names and all parameters are the same
 
+#### Task
+
+Similar to `Predicate` but representing a HTN task. If it once will be required to cope with preconditions and effects in the planning framework, this shall be done here. Currently, effects and preconditions are only defined in the domain file and processed by the planner, thus no need for representing them in the planning framework.
+
 #### Fluent
 
 The `Fluent` class represents a fluent `f(x_1, ..., x_n) = k`. The class has the following three fields:
@@ -250,3 +260,4 @@ The following methods are exposed by the `PredicateParams` class:
 A class defining constants for working with assertions. The following two constants are defined in the class:
 * `PREDICATE = 'predicate'`
 * `FLUENT = 'fluent'`
+* `TASK = 'task'`
