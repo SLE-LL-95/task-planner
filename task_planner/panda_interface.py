@@ -30,10 +30,7 @@ class PANDAInterface(TaskPlannerInterface):
 
     def plan(self, task_request: TaskRequest, robot: str, task_goals: list=None):
         '''
-        task_goals can be a list of any of the following variation of Predicate object
-            - Object itself
-            - tuple
-            - dict
+        task_goals must be a list of htn tasks
         '''
         # TODO: check if there are already goals in the knowledge base and,
         # if yes, add them to the task_goals list
@@ -165,7 +162,7 @@ class PANDAInterface(TaskPlannerInterface):
         #       :subtasks (and
         #           (task1 param_1, ... , param_n)
         #           (...)     
-        #           (taskn param_1, ... , parma_n)    
+        #           (taskn param_1, ... , param_n)    
         #       )
         #       :ordering()
         # )

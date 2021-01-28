@@ -10,6 +10,7 @@ class ActionModelLibrary(object):
         action.type = action_name
         try:
             action = getattr(ActionModelLibrary, action_name)(action, action_params)
+            #call assign_parameters here??
         except:
             print("Action {} not defined!".format(action_name))
             action = []

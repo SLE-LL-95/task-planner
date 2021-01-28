@@ -267,8 +267,9 @@ class Fluent(object):
 class Task(object):
     '''An object representing a htn task (task name, parameters)
         Preconditions and Effects are only interesting for the planner,
-        thus they are no considered here.
-       
+        thus they are not considered here.
+        TODO: Add priority defining a task order.
+
     @author Lou Lauter
     @contact lou.lauter@t-online.de
 
