@@ -28,6 +28,8 @@ import diagnostic_msgs.msg as diag_msgs
 #information['action_name'] --> Action Name
 
 class ActionDispatcher:
+    '''A very simple ROSplan action dispatcher
+    '''
     def __init__(self):
 
         #init ROS node

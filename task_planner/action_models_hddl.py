@@ -16,6 +16,7 @@ class ActionModelLibrary(object):
             action = []
         return action
     
+    # Actions for default domestic HDDL domain
     @staticmethod
     def MOVEBASE(action: Action, params: list) -> Action:
         action.parameter_order = ['Robot','Location0','Location1']

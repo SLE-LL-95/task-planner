@@ -269,10 +269,6 @@ class Task(object):
         Preconditions and Effects are only interesting for the planner,
         thus they are not considered here.
         TODO: Add priority defining a task order.
-
-    @author Lou Lauter
-    @contact lou.lauter@t-online.de
-
     '''
     def __init__(self):
         self.name = ''

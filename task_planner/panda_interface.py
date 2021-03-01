@@ -166,7 +166,7 @@ class PANDAInterface(TaskPlannerInterface):
         #       )
         #       :ordering()
         # )
-        #TODO: Allow Task ordering
+        #TODO: Allow Task ordering (ie add priority parameter to Task class)
 
         goal_str = ''
         task_lines = ''

@@ -7,6 +7,7 @@ set -e
 PANDA_DOWNLOAD_URL="https://www.uni-ulm.de/fileadmin/website_uni_ulm/iui.inst.090/panda/PANDA.jar"
 
 # Install paths
+# CHANGE THIS DIRECTORY
 INSTALL_DIR_ROOT="/opt/ropod/task-planner/bin"
 INSTALL_DIR_NAME="panda-planner"
 INSTALL_DIR=$INSTALL_DIR_ROOT/$INSTALL_DIR_NAME
