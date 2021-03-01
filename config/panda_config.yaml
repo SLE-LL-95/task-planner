@@ -1,4 +1,4 @@
 planner_name: PANDA
 domain_file: config/task_domains/HDDL/default-domestic-domain.hddl
-planner_cmd: java -jar /mnt/DATEN/Dokumente/Master_Autonomous_Systems/3rd_Semester/Software_Development_Project/HDDL_Parser/PANDA_Material/executable/PANDA.jar DOMAIN PROBLEM
+planner_cmd: java -jar /opt/ropod/task-planner/bin/panda-planner/PANDA.jar DOMAIN PROBLEM
 plan_file_path: .
